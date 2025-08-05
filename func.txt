@@ -2,8 +2,8 @@ roles : doctor , pharmacy , user
 verification :
 
 1. doctor - NMR
-2. pharmacy - retail drug licence and adhar
-3, user - adhar card
+2. user - adhar card
+3, pharmacy - retail drug licence and adhar
 
 PhoneNumber - primary
 
@@ -15,7 +15,17 @@ doctor - >
     NMR-Number
     yearRegistered
     adharNumber
+    hospital (where he working currently)
 
+
+
+patient - >
+    name
+    PhoneNumber
+    email
+    gender
+    dob
+    otherDetails(like alergic to somthing..)
 
 
 pharmacy - >
@@ -26,22 +36,36 @@ pharmacy - >
     adharNumber
     GSTIN
 
-
-user - >
-    name
-    PhoneNumber
-    email
-    gender
-    dob
-    otherDetails(like alergic to somthing..)
-
 DOCTOR ROUTES   
+
 ->login
 ->jwt
+
 ->CreateNewPrescription
 ->approvedPrscription(also also can reject)
 ->rejectedPrescrption
 ->historyPrescrption
 ->requestedPrescrption
 
+prescrption - >
+    registrationNumber
+    doctorWallet
+    patientWallet
+    doctor = {
+        name,PhoneNumber,hospital
+    },
+    patient = {
+        name , PhoneNumber , gender ,dob
+    },
+    medicines = {
+        nameOfMedicines : quantity,
+    },
+    advice
+    CreatedDate
 
+
+
+mongodb+srv://prieyanmn:<db_password>@doc-block.cx9gmns.mongodb.net/?retryWrites=true&w=majority&appName=doc-block
+
+doctor db done
+patient db no..
