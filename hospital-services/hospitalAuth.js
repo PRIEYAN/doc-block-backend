@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-require('../../database/hospitalDB.js'); 
+require('../database/hospitalDB.js'); 
 
 
 const router = express.Router();

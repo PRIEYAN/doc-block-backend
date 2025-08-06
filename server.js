@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const doctorAuth = require('./docter-services/auth-services/doctorAuth.js');
 const prescription = require('./docter-services/doctor-core-services/prescription.js');
+const hospitalAuth = require('./hospital-services/hospitalAuth.js');
+const hospitalCore = require('./hospital-services/hospitalCore.js');
 
 const app = express();
 app.use(cors());
@@ -13,8 +15,9 @@ app.use(express.json());
 app.use('/doctor/auth', doctorAuth);
 app.use('/doctor/prescription',prescription);
 
-//user
-
+//hospital
+app.use('/hospital/auth', hospitalAuth);
+app.use('/hospital/core', hospitalCore);
 
 app.get('/', (req, res) => {
     return res.status(200).json({ message: "App running" });
@@ -28,6 +31,8 @@ app.listen(PORT, () => {
 
 
 /*
+DOCTOR ROUTES
+
 http://localhost:5050/doctor/auth/signin
 http://localhost:5050/doctor/auth/login
 http://localhost:5050/doctor/auth/logout
@@ -40,5 +45,13 @@ http://localhost:5050/doctor/prescription/getPrescriptionDetails - to get all pr
 http://localhost:5050/doctor/prescription/rejectPrescription - to reject a prescription
 
 http://localhost:5050/doctor/prescription/prescriptionRequest - to approve a prescription request
+
+
+HOSPITAL ROUTES
+
+http://localhost:5050/hospital/auth/signin
+http://localhost:5050/hospital/auth/login
+http://localhost:5050/hospital/core/getDoctorDetails - to get all doctors of a hospital
+http://localhost:5050/hospital/core/viewPrescription/:doctorWallet - to view all prescriptions
 
 */
