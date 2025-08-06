@@ -42,12 +42,16 @@ DOCTOR ROUTES
 ->jwt
 
 ->CreateNewPrescription
-->approvedPrscription(also also can reject)
-->rejectedPrescrption
-->historyPrescrption
+
+->HISTORY OF PRESCRPTION<-
+    ->approvedPrscription(also also can reject)
+    ->rejectedPrescrption
+
+
 ->requestedPrescrption
 
 prescrption - >
+    prescrptionID (should be 5 digit with letters and numbers)
     registrationNumber
     doctorWallet
     patientWallet
@@ -61,11 +65,14 @@ prescrption - >
         nameOfMedicines : quantity,
     },
     advice
+    status (pending, approved, rejected)
     CreatedDate
 
 
 
 mongodb+srv://prieyanmn:<db_password>@doc-block.cx9gmns.mongodb.net/?retryWrites=true&w=majority&appName=doc-block
+fewfvKJN/*@@sdvafs3qeasdJNnipse
+
 
 doctor db done
 patient db no..

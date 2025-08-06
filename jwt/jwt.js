@@ -20,7 +20,7 @@ mongoose.connect(mongoURL)
     }   
 );  
 
-const Doctor = require('./database/doctorDB');
+const Doctor = require('../database/doctorDB.js');
 const patient =null; // Assuming you have a User model defined similarly
 const Pharmacy = null; // Assuming you have a Pharmacy model defined similarly
 

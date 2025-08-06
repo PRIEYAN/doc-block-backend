@@ -6,12 +6,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-require('./database/doctorDB'); 
+require('../../database/doctorDB.js'); 
 
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const router = express.Router();
+router.use(cors());
+router.use(express.json());
 
 const mongoURL = process.env.MONGOURL;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -26,7 +26,12 @@ mongoose.connect(mongoURL)
 
 const Doctor = mongoose.model('doctorInfo');
 
-app.post('/doctor/auth/signin',async(req,res)=>{
+router.get('/', (req, res) => {
+    return res.status(200).json({ message: "Doctor Auth Service is running" });
+}); 
+
+//doctor registration
+router.post('/signin',async(req,res)=>{
     try{
         const{name , PhoneNumber , email , NMR_Number , yearRegistered, adharNumber, password, hospital} = req.body;
         if(!name || !PhoneNumber || !email || !NMR_Number || !yearRegistered || !adharNumber || !password || !hospital){
@@ -51,11 +56,11 @@ app.post('/doctor/auth/signin',async(req,res)=>{
         const token = jwt.sign({ name,PhoneNumber,hospital }, process.env.JWT_SECRET, { expiresIn: '1d' });
         return res.status(201).json({ message: "Doctor registered successfully", token });
     }catch(error){
-        return res.status(500).json({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error",error:error.message});
     }
 })
-
-app.post('/doctor/auth/login', async (req, res) => {
+//doctor login
+router.post('/login', async (req, res) => {
     try {
         const { PhoneNumber, password } = req.body;
         if (!PhoneNumber || !password) {
@@ -67,7 +72,7 @@ app.post('/doctor/auth/login', async (req, res) => {
         }
         const isPasswordValid = await bcrypt.compare(password, doctor.password);
         if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ message: "Incorrect password" });
         }
         const token = jwt.sign({  PhoneNumber }, JWT_SECRET, { expiresIn: '1d' });
         return res.status(200).json({ message: "Login successful", token });
@@ -76,6 +81,8 @@ app.post('/doctor/auth/login', async (req, res) => {
     }
 });
 
-app.use('doctor/logout', (req, res) => {
+router.use('/logout', (req, res) => {
     return res.status(200).json({ message: "Logout successful" });
 });
+
+module.exports = router;
