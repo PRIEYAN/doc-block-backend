@@ -8,6 +8,7 @@ const hospitalAuth = require('./hospital-services/hospitalAuth.js');
 const hospitalCore = require('./hospital-services/hospitalCore.js');
 const pharmacyAuth = require('./pharmacy-services/pharmacyAuth.js');
 const pharmacyCore = require('./pharmacy-services/pharmacyCore.js');
+const patientAuth = require('./patient-services/patientAuth.js');
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,9 @@ app.use('/hospital/core', hospitalCore);
 //pharmacy
 app.use('/pharmacy/auth', pharmacyAuth);
 app.use('/pharmacy/core', pharmacyCore);
+
+//patient
+app.use('/patient/auth', patientAuth);
 
 
 
@@ -61,5 +65,16 @@ http://localhost:5050/hospital/auth/signin
 http://localhost:5050/hospital/auth/login
 http://localhost:5050/hospital/core/getDoctorDetails - to get all doctors of a hospital
 http://localhost:5050/hospital/core/viewPrescription/:doctorWallet - to view all prescriptions
+
+
+PHARMACY ROUTES
+http://localhost:5050/pharmacy/auth/signin
+http://localhost:5050/pharmacy/auth/login
+
+
+
+PATIENT ROUTES
+http://localhost:5050/patient/auth/signin
+http://localhost:5050/patient/auth/login
 
 */
