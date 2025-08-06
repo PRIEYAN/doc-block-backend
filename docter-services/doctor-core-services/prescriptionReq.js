@@ -27,7 +27,7 @@ const Doctor = mongoose.model('doctorInfo');
 const Prescription = mongoose.model('prescriptionDetails');
 const Patient = null;
 
-router.use('/', (req, res) => {
+router.get('/', (req, res) => {
     return res.status(200).json({message:"Prescription Request Service is running"});
 });
 
@@ -41,17 +41,18 @@ router.post('/prescriptionRequest', async (req, res) => {
         if(!decoded || !decoded.PhoneNumber){
             return res.status(400).json({message: "Invalid token"});
         }
-        const prescription = await Prescription.findOne({prescriptionID: prescriptionID, "doctor.PhoneNumber": decoded.PhoneNumber});
+        // Use the correct field name 'prescrptionID' for searching
+        const prescription = await Prescription.findOne({prescrptionID: prescriptionID, "doctor.PhoneNumber": decoded.PhoneNumber});
         if(!prescription){
-            return res.status(404).json({message: "Prescription not found"});
+            return res.status(404).json({message: "Prescription not found",doctorPhoneNumber: decoded.PhoneNumber,prescriptionID: prescriptionID});
         }
         const approvPrescription = await Prescription.updateOne(
-            { prescriptionID: prescriptionID, "doctor.PhoneNumber": decoded.PhoneNumber },
+            { prescrptionID: prescriptionID, "doctor.PhoneNumber": decoded.PhoneNumber },
             { 
-            $set: { 
-                status: 'approved',
-                UpdatedTime: new Date().toISOString()
-            } 
+                $set: { 
+                    status: 'approved',
+                    updatedDate: new Date()
+                } 
             }
         );
         if(approvPrescription.modifiedCount === 0){

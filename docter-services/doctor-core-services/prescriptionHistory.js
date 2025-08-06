@@ -1,5 +1,5 @@
 const express = require('express');
-const token = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); // <-- rename here
 const cors = require('cors');
 const mongoose = require('mongoose');
 const web3 = require('web3');
@@ -13,7 +13,7 @@ router.use(cors());
 router.use(express.json());
 
 const mongoURL = process.env.MONGOURL;
-const token_SECRET = process.env.token_SECRET;  
+const JWT_SECRET = process.env.JWT_SECRET;  
 
 mongoose.connect(mongoURL)
     .then(() => {
@@ -33,11 +33,11 @@ router.get('/',(req,res)=>{
 
 router.post('/getPrescriptionDetails', async (req, res) => {
     try{
-        const {token}=req.body;
+        const {token} = req.body;
         if(!token){
             return res.status(400).json({message: "token is required"});
         }
-        const decoded = token.verify(token, token_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET); // <-- use jwt here
         if(!decoded || !decoded.PhoneNumber){
             return res.status(400).json({message: "Invalid token"});
         }
@@ -57,7 +57,7 @@ router.post('/rejectPrescription', async (req, res) => {
         if(!token || !prescriptionID){
             return res.status(400).json({message: "Token and prescriptionID are required"});
         }
-        const decoded = token.verify(token, token_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET); // <-- use jwt here
         if(!decoded || !decoded.PhoneNumber){
             return res.status(400).json({message: "Invalid token"});
         }
