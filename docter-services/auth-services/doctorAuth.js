@@ -37,7 +37,7 @@ router.post('/signin',async(req,res)=>{
         if(!name || !PhoneNumber || !email || !NMR_Number || !yearRegistered || !adharNumber || !password || !hospital){
             return res.status(400).json({message: "All fields are required"});
         }
-        const existingDoctor = await Doctor.findOne({ PhoneNumber: PhoneNumber });
+        const existingDoctor = await Doctor.findOne({ email: email });
         if(existingDoctor){
             return res.status(400).json({message: "Doctor already exists, please login"});
         }
@@ -62,11 +62,11 @@ router.post('/signin',async(req,res)=>{
 //doctor login
 router.post('/login', async (req, res) => {
     try {
-        const { PhoneNumber, password } = req.body;
-        if (!PhoneNumber || !password) {
-            return res.status(400).json({ message: "Phone number and password are required" });
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: "email and password are required" });
         }
-        const doctor = await Doctor.findOne({ PhoneNumber }).select('+password');
+        const doctor = await Doctor.findOne({ email }).select('+password');
         if (!doctor) {
             return res.status(404).json({ message: "Doctor not found" });
         }
@@ -74,7 +74,8 @@ router.post('/login', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Incorrect password" });
         }
-        const token = jwt.sign({  PhoneNumber }, JWT_SECRET, { expiresIn: '1d' });
+        const PhoneNumber = doctor.PhoneNumber;
+        const token = jwt.sign({  PhoneNumber,email }, JWT_SECRET, { expiresIn: '1d' });
         return res.status(200).json({ message: "Login successful", token });
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });

@@ -1,11 +1,22 @@
 roles : doctor , pharmacy , user
 verification :
 
-1. doctor - NMR
-2. user - adhar card
-3, pharmacy - retail drug licence and adhar
+1. hospital
+2. doctor - NMR
+3. user - adhar card
+4. pharmacy - retail drug licence and adhar
 
-PhoneNumber - primary
+PhoneNumber - primary maybe email
+
+hospital - >
+    name
+    registrationNumber (primary)
+    establishmentYear
+    email
+    websiteLink
+    location
+    password
+
 
 doctor - >
     name
