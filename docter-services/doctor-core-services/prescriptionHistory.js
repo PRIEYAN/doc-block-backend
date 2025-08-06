@@ -31,7 +31,7 @@ router.get('/',(req,res)=>{
     return res.status(200).json({message:"History Service is running"});    
 });
 
-router.post('/getPatientDetails', async (req, res) => {
+router.post('/getPrescriptionDetails', async (req, res) => {
     try{
         const {token}=req.body;
         if(!token){
