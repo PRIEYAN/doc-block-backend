@@ -33,7 +33,8 @@ const prescriptionSchema = new mongoose.Schema({
     },
     medicines: { type: String, required: true },
     advice: { type: String, required: false },
-    status: { type: String, default: 'pending' }, // pending, approved, rejected
+    status: { type: String, require :true }, // pending, fullfilled
+    QRImage : { type: String, required: true },
     CreatedDate: { type: Date, default: Date.now },
     updatedDate: { type: Date, default: Date.now }
 },{collection: "prescriptionDetails"}); 

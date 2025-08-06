@@ -34,6 +34,7 @@ patient - >
     name
     PhoneNumber
     email
+    password
     gender
     dob
     otherDetails(like alergic to somthing..)
@@ -43,6 +44,7 @@ pharmacy - >
     name
     PhoneNumber
     email
+    password
     retailLicenceNumber
     adharNumber
     GSTIN
@@ -84,5 +86,5 @@ mongodb+srv://prieyanmn:<db_password>@doc-block.cx9gmns.mongodb.net/?retryWrites
 fewfvKJN/*@@sdvafs3qeasdJNnipse
 
 
-doctor db done
-patient db no..
+prescription db update..,(for qr)
+pharmacy auth,qr verification

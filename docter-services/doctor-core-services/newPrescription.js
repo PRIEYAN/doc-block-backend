@@ -50,8 +50,8 @@ router.post('/getPatientDetails', async (req, res) => {
 
 router.post('/newPrescription', async (req, res) => {
     try{
-        const {doctorWallet,patientWallet,doctorName,doctorPhoneNumber,doctorHospital,patientName,patientPhoneNumber, patientDOB,patientGender,medicinesName,medicinesQuantity,advice,registrationNumber} = req.body;
-        if(!doctorWallet || !patientWallet || !doctorName || !doctorPhoneNumber || !doctorHospital || !patientName || !patientPhoneNumber || !patientDOB || !patientGender || !medicinesName || !medicinesQuantity || !registrationNumber){
+        const {doctorWallet,patientWallet,doctorName,doctorPhoneNumber,doctorHospital,patientName,patientPhoneNumber, patientDOB,patientGender,medicinesName,medicinesQuantity,advice,registrationNumber, ORImage} = req.body;
+        if(!doctorWallet || !patientWallet || !doctorName || !doctorPhoneNumber || !doctorHospital || !patientName || !patientPhoneNumber || !patientDOB || !patientGender || !medicinesName || !medicinesQuantity || !registrationNumber || !ORImage){
             return res.status(400).json({message: "All fields are required"});
         }
 
@@ -80,6 +80,8 @@ router.post('/newPrescription', async (req, res) => {
             },
             medicines: medicinesString,
             advice: advice || '',
+            ORImage,
+            status: 'pending',
         });
         await newPrescription.save();
 

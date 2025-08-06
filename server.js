@@ -6,6 +6,8 @@ const doctorAuth = require('./docter-services/auth-services/doctorAuth.js');
 const prescription = require('./docter-services/doctor-core-services/prescription.js');
 const hospitalAuth = require('./hospital-services/hospitalAuth.js');
 const hospitalCore = require('./hospital-services/hospitalCore.js');
+const pharmacyAuth = require('./pharmacy-services/pharmacyAuth.js');
+const pharmacyCore = require('./pharmacy-services/pharmacyCore.js');
 
 const app = express();
 app.use(cors());
@@ -18,6 +20,12 @@ app.use('/doctor/prescription',prescription);
 //hospital
 app.use('/hospital/auth', hospitalAuth);
 app.use('/hospital/core', hospitalCore);
+
+//pharmacy
+app.use('/pharmacy/auth', pharmacyAuth);
+app.use('/pharmacy/core', pharmacyCore);
+
+
 
 app.get('/', (req, res) => {
     return res.status(200).json({ message: "App running" });
