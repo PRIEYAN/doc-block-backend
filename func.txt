@@ -61,12 +61,11 @@ prescrption - >
     patient = {
         name , PhoneNumber , gender ,dob
     },
-    medicines = {
-        nameOfMedicines : quantity,
-    },
+    medicines = "string but medice : quantity this format"
     advice
     status (pending, approved, rejected)
     CreatedDate
+    updatedDate
 
 
 

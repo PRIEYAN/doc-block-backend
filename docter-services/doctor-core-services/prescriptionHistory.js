@@ -6,7 +6,7 @@ const web3 = require('web3');
 require('dotenv').config();
 
 require('../../database/doctorDB.js');
-require('../../database/prescrptionDB.js');
+require('../../database/prescriptionDB.js');
 
 const router = express.Router();
 router.use(cors());
@@ -24,10 +24,10 @@ mongoose.connect(mongoURL)
     }); 
 
 const Doctor = mongoose.model('doctorInfo');
-const Prescription = mongoose.model('prescrptionDetails');
+const Prescription = mongoose.model('prescriptionDetails');
 
 
-app.get('/',(req,res)=>{
+router.get('/',(req,res)=>{
     return res.status(200).json({message:"History Service is running"});    
 });
 
@@ -82,3 +82,5 @@ router.post('/rejectPrescription', async (req, res) => {
         return res.status(500).json({message: "Internal server error", error: err.message});
     }
 });
+
+module.exports = router;

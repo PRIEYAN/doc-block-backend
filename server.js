@@ -3,14 +3,14 @@ const cors = require('cors');
 require('dotenv').config();
 
 const doctorAuth = require('./docter-services/auth-services/doctorAuth.js');
-const newPrescription = require('./docter-services/doctor-core-services/newPrescription.js');
+const prescription = require('./docter-services/doctor-core-services/prescription.js');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use('/doctor/auth', doctorAuth);
-app.use('/doctor/core', newPrescription);//for this in that folder there will be another server.js to run those files to get it here
+app.use('doctor/core',prescription);
 
 
 

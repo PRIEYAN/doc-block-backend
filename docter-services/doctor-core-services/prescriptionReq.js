@@ -6,7 +6,7 @@ const web3 = require('web3');
 require('dotenv').config();
 
 require('../../database/doctorDB.js');
-require('../../database/prescrptionDB.js');
+require('../../database/prescriptionDB.js');
 
 const router = express.Router();
 router.use(cors());
@@ -24,7 +24,7 @@ mongoose.connect(mongoURL)
     }); 
 
 const Doctor = mongoose.model('doctorInfo');
-const Prescription = mongoose.model('prescrptionDetails');
+const Prescription = mongoose.model('prescriptionDetails');
 const Patient = null;
 
 router.use('/', (req, res) => {
@@ -62,3 +62,5 @@ router.post('/prescriptionRequest', async (req, res) => {
         return res.status(500).json({message: "Internal server error", error: err.message});
     }
 });
+
+module.exports = router;

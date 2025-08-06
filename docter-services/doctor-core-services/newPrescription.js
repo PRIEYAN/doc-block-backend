@@ -6,7 +6,7 @@ const web3 = require('web3');
 require('dotenv').config();
 
 require('../../database/doctorDB.js');
-require('../../database/prescrptionDB.js');
+require('../../database/prescriptionDB.js');
 
 const router = express.Router();
 router.use(cors());
@@ -24,14 +24,14 @@ mongoose.connect(mongoURL)
     }); 
 
 const Doctor = mongoose.model('doctorInfo');
-const Prescription = mongoose.model('prescrptionDetails');
+const Prescription = mongoose.model('prescriptionDetails');
 const Patient = null;
 
-router.use('/', (req, res) => {
-    return res.status(200).json({message:"Doctor Auth Service is running"});
+router.get('/', (req, res) => {
+    return res.status(200).json({message:"Core func (newPrescription) is running"});
 });
 
-router.post('doctor/core/getPatientDetails', async (req, res) => {
+router.post('/getPatientDetails', async (req, res) => {
     try{
         const { PhoneNumber } = req.body;
         if(!PhoneNumber){
@@ -48,12 +48,17 @@ router.post('doctor/core/getPatientDetails', async (req, res) => {
     }
 });
 
-router.post('/doctor/core/newPrescription', async (req, res) => {
+router.post('/newPrescription', async (req, res) => {
     try{
-        const {doctorWallet,patientWallet,doctorName,doctorPhoneNumber,doctorHospital,patientName,patientPhoneNumber, patientDOB,patientGender,medicinesName,medicinesQuantity,advice} = req.body;
-        if(!doctorWallet || !patientWallet || !doctorName || !doctorPhoneNumber || !doctorHospital || !patientName || !patientPhoneNumber || !patientDOB || !patientGender || !medicinesName || !medicinesQuantity){
+        const {doctorWallet,patientWallet,doctorName,doctorPhoneNumber,doctorHospital,patientName,patientPhoneNumber, patientDOB,patientGender,medicinesName,medicinesQuantity,advice,registrationNumber} = req.body;
+        if(!doctorWallet || !patientWallet || !doctorName || !doctorPhoneNumber || !doctorHospital || !patientName || !patientPhoneNumber || !patientDOB || !patientGender || !medicinesName || !medicinesQuantity || !registrationNumber){
             return res.status(400).json({message: "All fields are required"});
         }
+
+        // Format medicines as string in "medicine: quantity" format
+        const medicinesString = Object.keys(medicinesName).map(key => 
+            `${medicinesName[key]}: ${medicinesQuantity[key]}`
+        ).join(', ');
 
         //web3..
 
@@ -61,6 +66,7 @@ router.post('/doctor/core/newPrescription', async (req, res) => {
         const newPrescription = new Prescription({
             doctorWallet,
             patientWallet,
+            registrationNumber,
             doctor: {
                 name: doctorName,
                 PhoneNumber: doctorPhoneNumber,
@@ -70,8 +76,9 @@ router.post('/doctor/core/newPrescription', async (req, res) => {
                 name: patientName,
                 PhoneNumber: patientPhoneNumber,
                 dob: new Date(patientDOB),
+                gender: patientGender
             },
-            medicines: new Map(Object.entries(medicinesName).map((key, index) => [key, medicinesQuantity[index]])),
+            medicines: medicinesString,
             advice: advice || '',
         });
         await newPrescription.save();
@@ -79,7 +86,7 @@ router.post('/doctor/core/newPrescription', async (req, res) => {
 
         return res.status(201).json({message: "Prescription created successfully", prescription: newPrescription});
     }catch(err){
-        return res.status(500).json({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error",error:err.message});
     }
 });
 

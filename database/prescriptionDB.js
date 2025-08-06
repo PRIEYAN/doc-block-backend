@@ -9,6 +9,7 @@ function generatePrescriptionID() {
     }
     return id;
 }
+
 const prescriptionSchema = new mongoose.Schema({
     prescrptionID: {
         type: String,
@@ -30,15 +31,13 @@ const prescriptionSchema = new mongoose.Schema({
         gender: { type: String, required: true },
         dob: { type: Date, required: true }
     },
-    medicines: {
-        type: Map,
-        of: Number,
-        required: true
-    },
+    medicines: { type: String, required: true },
     advice: { type: String, required: false },
     status: { type: String, default: 'pending' }, // pending, approved, rejected
     CreatedDate: { type: Date, default: Date.now },
-    UpdatedTime : {type:String,required:false}
-});
+    updatedDate: { type: Date, default: Date.now }
+},{collection: "prescriptionDetails"}); 
 
-module.exports = mongoose.model('prescriptionDetails', prescriptionSchema);
+const Prescription = mongoose.model('prescriptionDetails', prescriptionSchema);
+
+module.exports = Prescription;
