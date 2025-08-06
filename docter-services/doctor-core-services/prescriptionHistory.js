@@ -17,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(mongoURL)
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB (prescriptionHistory)");
     })
     .catch((err) => {
         console.error("MongoDB connection error:", err);

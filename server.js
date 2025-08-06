@@ -9,9 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//doctor
 app.use('/doctor/auth', doctorAuth);
 app.use('/doctor/prescription',prescription);
 
+//user
 
 
 app.get('/', (req, res) => {
@@ -23,12 +25,15 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+
+
 /*
 http://localhost:5050/doctor/auth/signin
 http://localhost:5050/doctor/auth/login
 http://localhost:5050/doctor/auth/logout
 
 
+http://localhost:5050/doctor/prescription/getPatientDetails - to get check whether the patient registered in app or not
 http://localhost:5050/doctor/prescription/newPrescription - to create new prescription
 
 http://localhost:5050/doctor/prescription/getPrescriptionDetails - to get all prescription details of a doctor

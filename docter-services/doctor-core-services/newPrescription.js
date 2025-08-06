@@ -17,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(mongoURL)
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB (newPrescription)");
     })
     .catch((err) => {
         console.error("MongoDB connection error:", err);
@@ -39,7 +39,7 @@ router.post('/getPatientDetails', async (req, res) => {
         }
         const existingPatient = await Patient.findOne({PhoneNumber:PhoneNumber});
         if(!existingPatient){
-            return res.status(404).json({message: "Patient not found"});
+            return res.status(404).json({message: "Patient not found,Patient should be registered first"});
         }
         return res.status(200).json({message: "Patient details fetched successfully", patient: existingPatient});
 
