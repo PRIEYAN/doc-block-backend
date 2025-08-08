@@ -9,8 +9,8 @@ const pharmacySchema = new mongoose.Schema({
     password : {type: String , require : true},
     location : {type:String , require : true},
     retailLicenceNumber : {type:String , require : true},
-    adharNumber : {type:String , require :true},
-    GSTIN : {type:String , require:true}
+    // adharNumber : {type:String , require :true},
+    // GSTIN : {type:String , require:true}
 },{collection:"pharmacyInfo"});
 
 const Pharmacy = mongoose.model('pharmacyInfo',pharmacySchema);

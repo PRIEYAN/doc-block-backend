@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const web3 = require('web3');
+const bcrypt = require('bcrypt');
+
 require('dotenv').config();
 
 require('../database/pharmacyDB.js');
@@ -31,9 +33,9 @@ router.get('/',(req,res)=>{
 router.post('/signin',async(req,res)=>{
     try{
 
-        const{name,PhoneNumber,email,password,location,retailLicense,adharNumber,GSTIN} = req.body;
-        if(!name || !PhoneNumber || !email || !password || !location || !retailLicense || !adharNumber || !GSTIN){
-            return res.status(400).json({message: "All fields are required"});
+        const{name,PhoneNumber,email,password,location,retailLicense} = req.body;
+        if(!name || !PhoneNumber || !email || !password || !location || !retailLicense ){
+            return res.status(400).json({message: "All fields are required !"});
         }
         const existingPharmacy = await Pharmacy.findOne({ email: email });
         if(existingPharmacy){
@@ -46,9 +48,7 @@ router.post('/signin',async(req,res)=>{
             email,
             password: hashedPassword,
             location,
-            retailLicense,
-            adharNumber,
-            GSTIN
+            retailLicense
         });
         await newPharmacy.save();
         const token = jwt.sign({ name, PhoneNumber,email }, JWT_SECRET, { expiresIn: '1d' });

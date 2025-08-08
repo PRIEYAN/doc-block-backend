@@ -38,12 +38,13 @@ router.post('/signin', async (req, res) => {
             registrationNumber,
             establishmentYear,
             email,
+            PhoneNumber,
             websiteLink,
             location,
             password
         } = req.body;
 
-        if (!name || !registrationNumber || !establishmentYear || !email || !websiteLink || !location || !password) {
+        if (!name || !registrationNumber||!PhoneNumber || !establishmentYear || !email || !websiteLink || !location || !password) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
@@ -59,6 +60,7 @@ router.post('/signin', async (req, res) => {
             registrationNumber,
             establishmentYear,
             email,
+            PhoneNumber,
             websiteLink,
             location,
             password: hashedPassword
@@ -83,7 +85,8 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Email and password are required." });
         }
 
-        const hospital = await Hospital.findOne({ email });
+        const hospital = await Hospital.findOne({ email }).select('+password'); // <-- fix here
+
         if (!hospital) {
             return res.status(401).json({ message: "Invalid email or password." });
         }
@@ -102,8 +105,9 @@ router.post('/login', async (req, res) => {
         return res.status(200).json({ token, message: "Login successful." });
     } catch (error) {
         console.error("Login error:", error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(500).json({ message: "Internal server error.", error: error.message });
     }
 });
+
 
 module.exports = router;
