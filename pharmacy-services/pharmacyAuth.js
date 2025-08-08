@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const web3 = require('web3');
 require('dotenv').config();
 
-require('../../database/pharmacyDB.js');
+require('../database/pharmacyDB.js');
 
 const router = express.Router();
 router.use(cors());

@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const web3 = require('web3');
 require('dotenv').config();
 
-require('../../database/doctorDB.js');
-require('../../database/prescriptionDB.js');
+require('../database/doctorDB.js');
+require('../database/pharmacyDB.js');
 
 const router = express.Router();
 router.use(cors());
@@ -31,3 +31,5 @@ router.get('/', (req, res) => {
 });
 
 //pharmacy core functions ...
+
+module.exports = router;
