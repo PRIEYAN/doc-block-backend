@@ -33,11 +33,11 @@ router.get('/', (req, res) => {
 //doctor registration
 router.post('/signin',async(req,res)=>{
     try{
-        const{name , PhoneNumber , email , NMR_Number , yearRegistered, adharNumber, password, hospital} = req.body;
-        if(!name || !PhoneNumber || !email || !NMR_Number || !yearRegistered || !adharNumber || !password || !hospital){
-            return res.status(400).json({message: "All fields are required"});
+        const{name , PhoneNumber , email , NMR_Number , password, hospital , specialization,availability } = req.body;
+        if(!name || !PhoneNumber || !email || !NMR_Number || !password || !hospital || !specialization || !availability){
+            return res.status(400).json({message: "All fields are required..."});
         }
-        const existingDoctor = await Doctor.findOne({ email: email });
+        const existingDoctor = await Doctor.findOne({ email: email, hospital: hospital });
         if(existingDoctor){
             return res.status(400).json({message: "Doctor already exists, please login"});
         }
@@ -47,10 +47,11 @@ router.post('/signin',async(req,res)=>{
             PhoneNumber: PhoneNumber,
             email,
             nmrNumber: NMR_Number,
-            yearRegistered,
-            adharNumber,
-            password : hashedPassword, 
-            hospital
+            password: hashedPassword,
+            hospital,
+            specialization,
+            availability: availability,
+            createdAt: new Date()
         });
         await newDoctor.save();
         const token = jwt.sign({ name,PhoneNumber,hospital }, process.env.JWT_SECRET, { expiresIn: '1d' });
@@ -58,13 +59,17 @@ router.post('/signin',async(req,res)=>{
     }catch(error){
         return res.status(500).json({message: "Internal server error",error:error.message});
     }
-})
+});
 //doctor login
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ message: "email and password are required" });
+        const { email, password , hospitalName} = req.body;
+        if (!email || !password || !hospitalName) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        existingDoctor = await Doctor.findOne({ email: email, hospital: hospitalName });
+        if (!existingDoctor) {
+            return res.status(400).json({ message: "Doctor not found or hospital name does not match" });
         }
         const doctor = await Doctor.findOne({ email }).select('+password');
         if (!doctor) {

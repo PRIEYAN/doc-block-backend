@@ -6,10 +6,10 @@ const doctorSchema = new mongoose.Schema({
     PhoneNumber: { type: String, required: true },
     email: { type: String, required: true },
     nmrNumber: { type: String, required: true },
-    yearRegistered: { type: String, required: true },
-    adharNumber: { type: String, required: true },
     password: { type: String, required: true , select : false },
     hospital: { type: String, required: true },
+    specialization: { type: String, required: true },
+    availability :{type : String, required: true},
     createdAt: { type: Date, default: Date.now },
     _id: { type: String, default: randomUUID }
 }, { collection: "doctorInfo" });

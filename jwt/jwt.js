@@ -4,27 +4,28 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
+const router = express.Router();
+router.use(cors());
+router.use(express.json());
 const mongoURL = process.env.MONGOURL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(mongoURL)
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB (jwt)");
     })
     .catch((err) => {
         console.error("MongoDB connection error:", err);
     }   
 );  
 
-const Doctor = require('../database/doctorDB.js');
-const patient =null; // Assuming you have a User model defined similarly
-const Pharmacy = null; // Assuming you have a Pharmacy model defined similarly
+const Doctor = require('../database/doctorDB.js');// 1
+const patient =require('../database/patientDB.js');// 2
+const Pharmacy = require('../database/pharmacyDB.js');// 3
+const hospital = require('../database/hospitalDB.js');// 4
+const presecription = require('../database/prescriptionDB.js');// 5
 
-app.post('/api/jwt/:role',async(req,res)=>{
+router.post('/:role',async(req,res)=>{
     const{role}=req.params;
     const {token} = req.body;
     if(!token){
@@ -42,10 +43,12 @@ app.post('/api/jwt/:role',async(req,res)=>{
             user = await patient?.findOne({ phonenumber: decoded.phonenumber }).select('-password');
         } else if (role === '3') {
             user = await Pharmacy?.findOne({ phonenumber: decoded.phonenumber }).select('-password');
-        } else {
-            return res.status(400).json({ message: "Invalid role" });
+        } else if (role === '4') {
+            user = await hospital?.findOne({ phonenumber: decoded.phonenumber }).select('-password');
         }
-
+        else if (role === '5') {
+            user = await presecription?.findOne({ phonenumber: decoded.phonenumber , hospital: decoded.hospital });
+        }
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -55,3 +58,5 @@ app.post('/api/jwt/:role',async(req,res)=>{
         return res.status(401).json({message: "Invalid token"});
     }
 });
+
+module.exports = router;

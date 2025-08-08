@@ -9,6 +9,8 @@ const hospitalCore = require('./hospital-services/hospitalCore.js');
 const pharmacyAuth = require('./pharmacy-services/pharmacyAuth.js');
 const pharmacyCore = require('./pharmacy-services/pharmacyCore.js');
 const patientAuth = require('./patient-services/patientAuth.js');
+const jwt = require('./jwt/jwt.js');
+
 
 const app = express();
 app.use(cors());
@@ -29,7 +31,8 @@ app.use('/pharmacy/core', pharmacyCore);
 //patient
 app.use('/patient/auth', patientAuth);
 
-
+//jwt
+app.use('/api/jwt', jwt);
 
 app.get('/', (req, res) => {
     return res.status(200).json({ message: "App running" });
@@ -77,4 +80,7 @@ PATIENT ROUTES
 http://localhost:5050/patient/auth/signin
 http://localhost:5050/patient/auth/login
 
+
+JWT ROUTES
+http://localhost:5050/api/jwt/:ROLE
 */

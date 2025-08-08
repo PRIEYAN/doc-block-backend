@@ -68,9 +68,9 @@ router.post('/signin', async (req, res) => {
 
         await newHospital.save();
 
-        const token = jwt.sign({ registrationNumber }, JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ registrationNumber,name }, JWT_SECRET, { expiresIn: '1d' });
 
-        return res.status(201).json({ message: "Hospital registered successfully." });
+        return res.status(201).json({ message: "Hospital registered successfully.",token });
     } catch (error) {
         console.error("Registration error:", error);
         return res.status(500).json({ message: "Internal server error." });
@@ -97,7 +97,7 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign(
-            { registrationNumber: hospital.registrationNumber, email: hospital.email },
+            { registrationNumber: hospital.registrationNumber, name : hospital.name },
             JWT_SECRET,
             { expiresIn: '1d' }
         );
