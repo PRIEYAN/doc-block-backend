@@ -50,10 +50,53 @@ router.post('/getPatientDetails', async (req, res) => {
 
 router.post('/newPrescription', async (req, res) => {
     try{
-        const {doctorWallet,patientWallet,doctorName,doctorPhoneNumber,doctorHospital,patientName,patientPhoneNumber, patientDOB,patientGender,medicinesName,medicinesQuantity,advice,registrationNumber, ORImage} = req.body;
-        if(!doctorWallet || !patientWallet || !doctorName || !doctorPhoneNumber || !doctorHospital || !patientName || !patientPhoneNumber || !patientDOB || !patientGender || !medicinesName || !medicinesQuantity || !registrationNumber || !ORImage){
-            return res.status(400).json({message: "All fields are required"});
-        }
+        const {
+    prescrptionID,
+    doctorWallet,
+    patientWallet,
+    doctorName,
+    doctorPhoneNumber,
+    doctorHospital,
+    patientName,
+    patientPhoneNumber,
+    patientDOB,
+    patientGender,
+    medicines,
+    advice,
+    registrationNumber,
+    QRImage
+} = req.body;
+
+if (
+    !prescrptionID ||
+    !doctorWallet ||
+    !patientWallet ||
+    !doctorName ||
+    !doctorPhoneNumber ||
+    !doctorHospital ||
+    !patientName ||
+    !patientPhoneNumber ||
+    !patientDOB ||
+    !patientGender ||
+    !medicines ||
+    Object.keys(medicines).length === 0 ||
+    !registrationNumber ||
+    !QRImage
+) {
+    return res.status(400).json({ message: "All fields are required" });
+}
+
+for (const [medName, medDetails] of Object.entries(medicines)) {
+    if (
+        typeof medDetails.m === "undefined" ||
+        typeof medDetails.E === "undefined" ||
+        typeof medDetails.n === "undefined" ||
+        typeof medDetails.time === "undefined"
+    ) {
+        return res.status(400).json({ message: `Medicine '${medName}' is missing required schedule fields` });
+    }
+}
+
 
         // Format medicines as string in "medicine: quantity" format
         const medicinesString = Object.keys(medicinesName).map(key => 

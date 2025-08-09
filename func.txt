@@ -86,5 +86,4 @@ mongodb+srv://prieyanmn:<db_password>@doc-block.cx9gmns.mongodb.net/?retryWrites
 fewfvKJN/*@@sdvafs3qeasdJNnipse
 
 
-prescription db update..,(for qr)
-pharmacy auth,qr verification
+
