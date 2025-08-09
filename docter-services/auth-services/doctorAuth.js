@@ -13,16 +13,7 @@ const router = express.Router();
 router.use(cors());
 router.use(express.json());
 
-const mongoURL = process.env.MONGOURL;
 const JWT_SECRET = process.env.JWT_SECRET;
-
-mongoose.connect(mongoURL)
-    .then(()=>{
-        console.log("Connected to MongoDB (doctorAuth)");
-    })
-    .catch((err)=>{
-        console.error("MongoDB connection error:", err);
-    });
 
 const Doctor = mongoose.model('doctorInfo');
 const Hospital = mongoose.model('hospitalInfo');
@@ -55,6 +46,8 @@ router.post('/signin',async(req,res)=>{
             createdAt: new Date()
         });
         await newDoctor.save();
+        
+        const token = jwt.sign({ PhoneNumber, email }, JWT_SECRET, { expiresIn: '1d' });
         return res.status(201).json({ message: "Doctor registered successfully", token });
     }catch(error){
         return res.status(500).json({message: "Internal server error",error:error.message});

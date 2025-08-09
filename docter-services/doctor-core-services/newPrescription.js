@@ -7,6 +7,7 @@ require('dotenv').config();
 
 require('../../database/doctorDB.js');
 require('../../database/prescriptionDB.js');
+require('../../database/patientDB.js');
 
 const router = express.Router();
 router.use(cors());
@@ -17,35 +18,45 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(mongoURL)
     .then(() => {
-        console.log("Connected to MongoDB (newPrescription)");
-    })
+        console.log("Connected to MongoDB (newprescription)");
+    }  )
     .catch((err) => {
         console.error("MongoDB connection error:", err);
-    }); 
+    });
 
 const Doctor = mongoose.model('doctorInfo');
 const Prescription = mongoose.model('prescriptionDetails');
-const Patient = null;
+const Patient = mongoose.model('patientInfo');
 
 router.get('/', (req, res) => {
     return res.status(200).json({message:"Core func (newPrescription) is running"});
 });
 
 router.post('/getPatientDetails', async (req, res) => {
-    try{
-        const { PhoneNumber } = req.body;
-        if(!PhoneNumber){
-            return res.status(400).json({message: "PhoneNumber is required"});
-        }
-        const existingPatient = await Patient.findOne({PhoneNumber:PhoneNumber});
-        if(!existingPatient){
-            return res.status(404).json({message: "Patient not found,Patient should be registered first"});
-        }
-        return res.status(200).json({message: "Patient details fetched successfully", patient: existingPatient});
+  try {
+    const { PhoneNumber } = req.body;
 
-    }catch(err){
-        return res.status(500).json({message: "Internal server error"});
+    if (!PhoneNumber) {
+      return res.status(400).json({ message: "PhoneNumber is required" });
     }
+
+    const existingPatient = await Patient.findOne({ PhoneNumber });
+
+    if (!existingPatient) {
+      return res.status(404).json({ message: "Patient not found, register first" });
+    }
+
+    return res.status(200).json({
+      message: "Patient details fetched successfully",
+      patient: existingPatient
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal server error",
+      error: err.message
+    });
+  }
 });
 
 router.post('/newPrescription', async (req, res) => {

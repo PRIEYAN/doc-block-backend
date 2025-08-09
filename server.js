@@ -1,6 +1,17 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 require('dotenv').config();
+
+// Connect to MongoDB once at the application level
+const mongoURL = process.env.MONGOURL;
+mongoose.connect(mongoURL)
+    .then(() => {
+        console.log("Connected to MongoDB");
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+    });
 
 const doctorAuth = require('./docter-services/auth-services/doctorAuth.js');
 const prescription = require('./docter-services/doctor-core-services/prescription.js');
