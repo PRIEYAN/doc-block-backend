@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 require('../../database/doctorDB.js'); 
-
+require('../../database/hospitalDB.js')
 
 const router = express.Router();
 router.use(cors());
@@ -25,6 +25,7 @@ mongoose.connect(mongoURL)
     });
 
 const Doctor = mongoose.model('doctorInfo');
+const Hospital = mongoose.model('hospitalInfo');
 
 router.get('/', (req, res) => {
     return res.status(200).json({ message: "Doctor Auth Service is running" });
@@ -85,6 +86,20 @@ router.post('/login', async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 });
+
+router.get('/getHospital', async (req, res) => {
+  try {
+    const hospitalNames = await Hospital.find({}, { name: 1, _id: 0 });
+
+    return res.status(200).json({
+      message: "Hospital names fetched successfully",
+      hospitalNames
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 
 router.use('/logout', (req, res) => {
     return res.status(200).json({ message: "Logout successful" });

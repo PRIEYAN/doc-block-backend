@@ -34,6 +34,7 @@ app.use('/patient/auth', patientAuth);
 //jwt
 app.use('/api/jwt', jwt);
 
+
 app.get('/', (req, res) => {
     return res.status(200).json({ message: "App running" });
 });
@@ -68,6 +69,8 @@ http://localhost:5050/hospital/auth/signin
 http://localhost:5050/hospital/auth/login
 http://localhost:5050/hospital/core/getDoctorDetails - to get all doctors of a hospital
 http://localhost:5050/hospital/core/viewPrescription/:doctorWallet - to view all prescriptions
+http://localhost:5050/hospital/auth/getHospital - to get all hospitals
+
 
 
 PHARMACY ROUTES
