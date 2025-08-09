@@ -70,7 +70,7 @@ router.post('/signin', async (req, res) => {
 
         const token = jwt.sign({ registrationNumber,name }, JWT_SECRET, { expiresIn: '1d' });
 
-        return res.status(201).json({ message: "Hospital registered successfully.",token });
+        return res.status(200).json({ message: "Hospital registered successfully.",token });
     } catch (error) {
         console.error("Registration error:", error);
         return res.status(500).json({ message: "Internal server error." });

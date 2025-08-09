@@ -54,7 +54,6 @@ router.post('/signin',async(req,res)=>{
             createdAt: new Date()
         });
         await newDoctor.save();
-        const token = jwt.sign({ name,PhoneNumber,hospital }, process.env.JWT_SECRET, { expiresIn: '1d' });
         return res.status(201).json({ message: "Doctor registered successfully", token });
     }catch(error){
         return res.status(500).json({message: "Internal server error",error:error.message});
