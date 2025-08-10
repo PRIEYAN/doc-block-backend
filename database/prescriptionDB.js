@@ -1,14 +1,22 @@
 const { randomUUID } = require('crypto');
 const mongoose = require('mongoose');
 
+function genPrescription() {
+    const chars = '0123456789';
+    let id = 'ZRP';
+    for (let i = 0; i < 4; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+}
 
 const prescriptionSchema = new mongoose.Schema({
     prescrptionID: {
         type: String,
         required: true,
+        default : genPrescription,
         unique: true,
     },
-    registrationNumber: { type: String, required: true },
     doctorWallet: { type: String, required: true },
     patientWallet: { type: String, required: true },
     doctor: {

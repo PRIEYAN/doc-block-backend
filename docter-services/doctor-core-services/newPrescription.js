@@ -62,7 +62,6 @@ router.post('/getPatientDetails', async (req, res) => {
 router.post('/newPrescription', async (req, res) => {
     try{
         const {
-    prescrptionID,
     doctorWallet,
     patientWallet,
     doctorName,
@@ -74,12 +73,9 @@ router.post('/newPrescription', async (req, res) => {
     patientGender,
     medicines,
     advice,
-    registrationNumber,
-    QRImage
 } = req.body;
 
 if (
-    !prescrptionID ||
     !doctorWallet ||
     !patientWallet ||
     !doctorName ||
@@ -90,9 +86,7 @@ if (
     !patientDOB ||
     !patientGender ||
     !medicines ||
-    Object.keys(medicines).length === 0 ||
-    !registrationNumber ||
-    !QRImage
+    Object.keys(medicines).length === 0  
 ) {
     return res.status(400).json({ message: "All fields are required" });
 }
@@ -109,10 +103,6 @@ for (const [medName, medDetails] of Object.entries(medicines)) {
 }
 
 
-        // Format medicines as string in "medicine: quantity" format
-        const medicinesString = Object.keys(medicinesName).map(key => 
-            `${medicinesName[key]}: ${medicinesQuantity[key]}`
-        ).join(', ');
 
         //web3..
 
@@ -120,7 +110,6 @@ for (const [medName, medDetails] of Object.entries(medicines)) {
         const newPrescription = new Prescription({
             doctorWallet,
             patientWallet,
-            registrationNumber,
             doctor: {
                 name: doctorName,
                 PhoneNumber: doctorPhoneNumber,
@@ -132,9 +121,9 @@ for (const [medName, medDetails] of Object.entries(medicines)) {
                 dob: new Date(patientDOB),
                 gender: patientGender
             },
-            medicines: medicinesString,
+            medicines: medicines,
             advice: advice || '',
-            ORImage,
+            QRImage : 'Nill',
             status: 'pending',
         });
         await newPrescription.save();
@@ -145,5 +134,24 @@ for (const [medName, medDetails] of Object.entries(medicines)) {
         return res.status(500).json({message: "Internal server error",error:err.message});
     }
 });
+
+router.post('/newPrescription/uploadImage', async (req, res) => {
+    try {
+        const { prescriptionId, imageUrl } = req.body;
+        if (!prescriptionId || !imageUrl) {
+            return res.status(400).json({ message: "Prescription ID and image URL are required" });
+        }
+        const prescription = await Prescription.findById(prescriptionId);
+        if (!prescription) {
+            return res.status(404).json({ message: "Prescription not found" });
+        }
+        prescription.ORImage = imageUrl;
+        await prescription.save();
+        return res.status(200).json({ message: "Image uploaded successfully", prescription });
+    } catch (err) {
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
+
 
 module.exports = router;

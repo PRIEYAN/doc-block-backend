@@ -74,18 +74,15 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
         
-        // Find patient and include password field
         const patient = await Patient.findOne({ email: email }).select('+password');
         if (!patient) {
             return res.status(404).json({ message: "Patient not found" });
         }
         
-        // Check if password exists in the document
         if (!patient.password) {
             return res.status(500).json({ message: "Invalid patient data - password missing" });
         }
         
-        // Validate password
         const isPasswordValid = await bcrypt.compare(password, patient.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
