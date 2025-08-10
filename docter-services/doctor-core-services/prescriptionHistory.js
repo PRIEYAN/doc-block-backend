@@ -12,16 +12,7 @@ const router = express.Router();
 router.use(cors());
 router.use(express.json());
 
-const mongoURL = process.env.MONGOURL;
 const JWT_SECRET = process.env.JWT_SECRET;  
-
-mongoose.connect(mongoURL)
-    .then(() => {
-        console.log("Connected to MongoDB (prescriptionHistory)");
-    })
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
-    }); 
 
 const Doctor = mongoose.model('doctorInfo');
 const Prescription = mongoose.model('prescriptionDetails');

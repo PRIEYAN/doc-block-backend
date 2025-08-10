@@ -10,15 +10,12 @@ const router = express.Router();
 router.use(cors());
 router.use(express.json());
 
-const mongoURL = process.env.MONGOURL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-mongoose.connect(mongoURL)
-    .then(() => console.log("Connected to MongoDB (patientAuth)"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+const Patient = mongoose.model('patientInfo');  
 
-router.get('/', (req, res) => {
-    return res.status(200).json({ message: "Patient Auth Service is running" });
+router.get('/',(req,res)=>{
+    return res.status(200).json({message: "Patient Auth Service is running"});
 });
 
 router.post('/signin', async (req, res) => {
@@ -29,7 +26,12 @@ router.post('/signin', async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Convert DOB DD/MM/YYYY to Date object
+        // Validate password is not empty
+        if (!password || password.trim() === '') {
+            return res.status(400).json({ message: "Password cannot be empty" });
+        }
+
+        // Convert DOB from DD/MM/YYYY to Date object
         if (typeof dob === 'string' && dob.includes('/')) {
             const [day, month, year] = dob.split('/');
             dob = new Date(`${year}-${month}-${day}`);
@@ -60,6 +62,7 @@ router.post('/signin', async (req, res) => {
         return res.status(201).json({ message: "Patient registered successfully", token });
 
     } catch (error) {
+        console.error("Patient registration error:", error);
         return res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
@@ -70,21 +73,29 @@ router.post('/login', async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
         }
-
-        const patient = await Patient.findOne({ email }).select('+password');
+        
+        // Find patient and include password field
+        const patient = await Patient.findOne({ email: email }).select('+password');
         if (!patient) {
             return res.status(404).json({ message: "Patient not found" });
         }
-
+        
+        // Check if password exists in the document
+        if (!patient.password) {
+            return res.status(500).json({ message: "Invalid patient data - password missing" });
+        }
+        
+        // Validate password
         const isPasswordValid = await bcrypt.compare(password, patient.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid password" });
         }
-
+        
         const token = jwt.sign({ name: patient.name, PhoneNumber: patient.PhoneNumber, email: patient.email }, JWT_SECRET, { expiresIn: '1d' });
         return res.status(200).json({ message: "Login successful", token });
 
     } catch (error) {
+        console.error("Patient login error:", error);
         return res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
