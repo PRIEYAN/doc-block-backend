@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const Patient = require('../database/patientDB.js'); // import model
+require('../database/patientDB.js'); // import model
 
 const router = express.Router();
 router.use(cors());
