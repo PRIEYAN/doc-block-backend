@@ -94,6 +94,23 @@ router.get('/getHospital', async (req, res) => {
 });
 
 
+router.post('/getDoctorDetails', async (req, res) => {
+    try {
+        const{token}=req.body;
+        decode = jwt.verify(token, JWT_SECRET);
+        if(!decode){
+            return res.status(500).json({message:"invalid token"})
+        }
+        const doctorDetails = await Doctor.findOne({email:decode.email});
+        if(!doctorDetails){
+            return res.status(500).json({message:"no doctors found"});
+        }
+        return res.status(200).json({message:"Doctor found !",doctor:doctorDetails})
+    }catch(err){
+        return res.status(500).json({message:err.message});
+    }
+});
+
 router.use('/logout', (req, res) => {
     return res.status(200).json({ message: "Logout successful" });
 });
