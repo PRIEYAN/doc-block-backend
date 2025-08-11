@@ -61,6 +61,7 @@ DOCTOR ROUTES
 
 http://localhost:5050/doctor/auth/signin
 http://localhost:5050/doctor/auth/login
+http://localhost:5050/doctor/auth/getDoctorDetails
 http://localhost:5050/doctor/auth/logout
 
 
